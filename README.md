@@ -63,7 +63,7 @@ open -a "$(brenum.js 'e c')"
 ```
 $ brenum.js -h
 Usage:
-  brenum.js [-h] [-a] [-r] [-p | -u] <search string>
+  brenum.js [-h] [-a] [-r] [-p | -u] [-M] <search string>
 
   Enumerates browsers. Returns default browser if no options are specified.
   If a search string is provided shows the browser with name containing given
@@ -77,6 +77,7 @@ Options:
   r - Show only currently running browser(s)
   p - Show browsers' path(s)
   u - Show browsers' path(s) as URL(s)
+  M - Do NOT check for multiple browsers
 ```
 ## Getting Handy With The Source
 ### Get jxapp
