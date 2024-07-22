@@ -11,8 +11,9 @@ class Options {
         this.all = false;
         this.running = false;
         this.output = Output.NAME;
+        this.first_browser_goes = false;
         const optParser = new BasicParser(
-            ':harup',
+            ':harupM',
             aArgv
         );
         while (true) {
@@ -40,7 +41,11 @@ class Options {
                     log('Printing path(s)');
                     this.output = Output.PATH;
                     break;
-            }
+                case 'M':
+                    log('Do not check for multiple browsers');
+                    this.first_browser_goes = true;
+                    break;
+                }
         }
         this.namePart = aArgv[optParser.optind];
     }

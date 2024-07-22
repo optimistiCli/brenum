@@ -10,7 +10,7 @@
 
 function usage(aSelf) {
 log(`Usage:
-  ${aSelf} [-h] [-a] [-r] [-p | -u] <search string>
+  ${aSelf} [-h] [-a] [-r] [-p | -u] [-M] <search string>
 
   Enumerates browsers. Returns default browser if no options are specified.
   If a search string is provided shows the browser with name containing given
@@ -24,6 +24,7 @@ Options:
   r - Show only currently running browser(s)
   p - Show browsers' path(s)
   u - Show browsers' path(s) as URL(s)
+  M - Do NOT check for multiple browsers
 `)
 }
 
@@ -41,9 +42,12 @@ class Context {
 }
 
 function getOne(aContext) {
+    const find_worker = aContext.options.first_browser_goes
+        ? 'findFirst'
+        : 'findOne'
     return [
         aContext.options.namePart
-            ? aContext.workspace.browsers.findOne(aContext.options.namePart)
+            ? aContext.workspace.browsers[find_worker](aContext.options.namePart)
             : aContext.workspace.browsers.default
     ]
 }

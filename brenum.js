@@ -169,7 +169,21 @@ class Browsers {
         }
         return foundUrl
     }
+
+    findFirst(aPart) {
+        const part = aPart.toLowerCase()
+        const foundUrl = this._urls.find(
+            (aUrl) => {
+                return aUrl.nameIncludesLower(part)
+            }
+        )
+        if (!foundUrl) {
+            throw new NoneFoundError(aPart)
+        }
+        return foundUrl
+    }
 }
+
 
 class BrowsersError extends Error {}
 
@@ -524,8 +538,9 @@ class Options {
         this.all = false;
         this.running = false;
         this.output = Output.NAME;
+        this.first_browser_goes = false;
         const optParser = new BasicParser(
-            ':harup',
+            ':harupM',
             aArgv
         );
         while (true) {
@@ -553,7 +568,11 @@ class Options {
                     log('Printing path(s)');
                     this.output = Output.PATH;
                     break;
-            }
+                case 'M':
+                    log('Do not check for multiple browsers');
+                    this.first_browser_goes = true;
+                    break;
+                }
         }
         this.namePart = aArgv[optParser.optind];
     }
@@ -606,7 +625,7 @@ class NoneRunningError extends CocoaAppsError {
 
 function usage(aSelf) {
 log(`Usage:
-  ${aSelf} [-h] [-a] [-r] [-p | -u] <search string>
+  ${aSelf} [-h] [-a] [-r] [-p | -u] [-M] <search string>
 
   Enumerates browsers. Returns default browser if no options are specified.
   If a search string is provided shows the browser with name containing given
@@ -620,6 +639,7 @@ Options:
   r - Show only currently running browser(s)
   p - Show browsers' path(s)
   u - Show browsers' path(s) as URL(s)
+  M - Do NOT check for multiple browsers
 `)
 }
 
@@ -637,9 +657,12 @@ class Context {
 }
 
 function getOne(aContext) {
+    const find_worker = aContext.options.first_browser_goes
+        ? 'findFirst'
+        : 'findOne'
     return [
         aContext.options.namePart
-            ? aContext.workspace.browsers.findOne(aContext.options.namePart)
+            ? aContext.workspace.browsers[find_worker](aContext.options.namePart)
             : aContext.workspace.browsers.default
     ]
 }

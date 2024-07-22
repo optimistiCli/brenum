@@ -46,7 +46,21 @@ class Browsers {
         }
         return foundUrl
     }
+
+    findFirst(aPart) {
+        const part = aPart.toLowerCase()
+        const foundUrl = this._urls.find(
+            (aUrl) => {
+                return aUrl.nameIncludesLower(part)
+            }
+        )
+        if (!foundUrl) {
+            throw new NoneFoundError(aPart)
+        }
+        return foundUrl
+    }
 }
+
 
 class BrowsersError extends Error {}
 
